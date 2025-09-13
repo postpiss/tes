@@ -135,7 +135,7 @@
         const videosContainer = document.getElementById('videosContainer');
         const noVideosMessage = document.getElementById('noVideosMessage');
 
-        // Mock database for videos (in a real app, this would be server-side)
+        // Database for videos using localStorage
         let videos = JSON.parse(localStorage.getItem('videos')) || [];
 
         // Display existing videos
@@ -191,9 +191,23 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Generate thumbnail (mock function - in real app would use canvas)
-        function generateThumbnail() {
-            return 'http://static.photos/technology/320x240/' + Math.floor(Math.random() * 100);
+        // Generate thumbnail from video
+        function generateThumbnail(videoFile) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                
+                video.src = URL.createObjectURL(videoFile);
+                video.onloadeddata = () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const thumbnail = canvas.toDataURL('image/jpeg');
+                    resolve(thumbnail);
+                };
+                video.currentTime = 1; // Capture frame at 1 second
+            });
         }
 
         // Event Listeners
@@ -233,7 +247,7 @@
             }
         });
 
-        confirmUpload.addEventListener('click', () => {
+        confirmUpload.addEventListener('click', async () => {
             if (!videoInput.files.length) {
                 alert('Please select a video file.');
                 return;
@@ -242,27 +256,36 @@
             const title = videoTitle.value.trim() || 'Untitled Video';
             const file = videoInput.files[0];
             
-            // In a real app, you would upload the file to a server here
-            // For demo purposes, we'll simulate upload with a mock URL
-            const mockVideoUrl = URL.createObjectURL(file);
+            // Check file size (limit to 2MB for localStorage demo)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('For this demo, please select a video smaller than 2MB.');
+                return;
+            }
             
-            const newVideo = {
-                id: Date.now(),
-                title: title,
-                url: mockVideoUrl,
-                thumbnail: generateThumbnail(),
-                date: new Date().toISOString()
-            };
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const videoData = e.target.result;
+                const newVideo = {
+                    id: Date.now(),
+                    title: title,
+                    url: videoData, // Store video as base64 data
+                    thumbnail: generateThumbnail(),
+                    date: new Date().toISOString()
+                };
 
-            videos.unshift(newVideo);
-            localStorage.setItem('videos', JSON.stringify(videos));
-            
-            uploadModal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            videoInput.value = '';
-            videoTitle.value = '';
-            
-            displayVideos();
+                videos.unshift(newVideo);
+                localStorage.setItem('videos', JSON.stringify(videos));
+                
+                uploadModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                videoInput.value = '';
+                videoTitle.value = '';
+                
+                displayVideos();
+            };
+            reader.readAsDataURL(file);
+            return;
+
         });
 
         // Initialize
