@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoCloud - Upload & Store Videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        .video-card:hover .play-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+            background-color: #f8fafc;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i data-feather="film" class="text-indigo-600 mr-2"></i>
+                    <span class="text-xl font-semibold text-gray-900">VideoCloud</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
+                        <i data-feather="upload" class="mr-2"></i>
+                        Upload
+                    </button>
+                    <div class="relative">
+                        <img src="http://static.photos/people/200x200/1" alt="Profile" class="w-8 h-8 rounded-full cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Upload Section -->
+        <section class="mb-12" data-aos="fade-up">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Upload Your Videos</h2>
+                <div class="upload-area rounded-lg p-8 text-center cursor-pointer">
+                    <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="upload-cloud" class="text-indigo-600 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-700 mb-1">Drag & drop videos here</h3>
+                    <p class="text-gray-500 mb-4">or click to browse files</p>
+                    <p class="text-sm text-gray-400">MP4, MOV, AVI up to 2GB</p>
+                    <input type="file" class="hidden" id="file-upload" accept="video/*">
+                </div>
+                
+                <!-- Upload Progress (hidden by default) -->
+                <div class="mt-6 hidden" id="upload-progress">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>sample-video.mp4</span>
+                        <span>25%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 25%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Library -->
+        <section data-aos="fade-up">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Your Video Library</h2>
+                <div class="flex items-center space-x-2">
+                    <div class="relative">
+                        <select class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>Sort by: Newest</option>
+                            <option>Sort by: Oldest</option>
+                            <option>Sort by: Name</option>
+                        </select>
+                        <i data-feather="chevron-down" class="absolute right-3 top-2.5 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Video Card 1 -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <div class="relative pt-[56.25%] bg-gray-100">
+                        <img src="http://static.photos/nature/640x360/1" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center play-icon opacity-0 transition">
+                            <div class="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                <i data-feather="play" class="text-indigo-600"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                            4:32
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-800 mb-1">Mountain Adventure</h3>
+                        <p class="text-sm text-gray-500">Uploaded: 2 days ago</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs text-gray-400">256 MB</span>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="share-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 2 -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <div class="relative pt-[56.25%] bg-gray-100">
+                        <img src="http://static.photos/cityscape/640x360/2" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center play-icon opacity-0 transition">
+                            <div class="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                <i data-feather="play" class="text-indigo-600"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                            12:15
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-800 mb-1">City Time-lapse</h3>
+                        <p class="text-sm text-gray-500">Uploaded: 1 week ago</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs text-gray-400">1.2 GB</span>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="share-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 3 -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <div class="relative pt-[56.25%] bg-gray-100">
+                        <img src="http://static.photos/travel/640x360/3" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center play-icon opacity-0 transition">
+                            <div class="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                <i data-feather="play" class="text-indigo-600"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                            8:42
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-800 mb-1">Beach Sunset</h3>
+                        <p class="text-sm text-gray-500">Uploaded: 3 weeks ago</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs text-gray-400">780 MB</span>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i data-feather="share-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center md:order-2 space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i data-feather="twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i data-feather="facebook"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i data-feather="instagram"></i>
+                    </a>
+                </div>
+                <div class="mt-8 md:mt-0 md:order-1">
+                    <p class="text-center text-base text-gray-400">
+                        &copy; 2023 VideoCloud. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Simple upload simulation
+        document.querySelector('.upload-area').addEventListener('click', function() {
+            document.getElementById('file-upload').click();
+        });
+
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                const uploadProgress = document.getElementById('upload-progress');
+                const progressBar = document.querySelector('.progress-bar');
+                
+                // Show upload progress
+                uploadProgress.classList.remove('hidden');
+                uploadProgress.querySelector('span:first-child').textContent = fileName;
+                
+                // Simulate upload progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    
+                    uploadProgress.querySelector('span:last-child').textContent = Math.round(progress) + '%';
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress === 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            alert('Upload completed!');
+                            uploadProgress.classList.add('hidden');
+                            progressBar.style.width = '0%';
+                        }, 500);
+                    }
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
